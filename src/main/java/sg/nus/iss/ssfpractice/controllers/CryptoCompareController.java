@@ -19,10 +19,11 @@ public class CryptoCompareController {
     private CryptoCompareService ccSvc;
 
     @GetMapping
-    public String getPrice(Model model, @RequestParam String crypto){
-        List<CryptoCompare> compare = ccSvc.getPrice(crypto);
-        model.addAttribute("crypto", crypto.toLowerCase());
-        model.addAttribute("", attributeValue)
+    public String getCryptoCompare(Model model, @RequestParam String coinName, String currency){
+        List<CryptoCompare> cryptoCompare = ccSvc.getCryptoCompare(coinName, currency);
+        model.addAttribute("coinName", coinName.toLowerCase());
+        model.addAttribute("cryptoCompare", cryptoCompare);
+        return "cryptoCompare";
 
     }
     

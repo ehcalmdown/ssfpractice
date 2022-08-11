@@ -4,12 +4,9 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.net.URLEncoder;
 import java.util.Collections;
-import java.util.Currency;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
-
-import javax.swing.text.html.Option;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,7 +17,6 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import jakarta.json.Json;
-import jakarta.json.JsonArray;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonReader;
 import sg.nus.iss.ssfpractice.models.CryptoCompare;
@@ -32,7 +28,7 @@ public class CryptoCompareService {
     
    private static final String URL = "https://min-api.cryptocompare.com/data/pricemulti";
 
-   @Value("${API_KEY}")
+   @Value("${API_KEY}") //f14b75d8bc0503e27d1a0cc56627523e42b3955bbbbbb91c6b0f73bb1be816ab  API KEY, PASSWORD IS chicken
     private String key;
 
     @Autowired

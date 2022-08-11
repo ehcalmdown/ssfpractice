@@ -5,14 +5,14 @@ import jakarta.json.JsonObject;
 
 public class CryptoCompare {
 
-    private String crypto;
+    private String coinName;
     private String currency;
     private String price;
-    public String getCrypto() {
-        return crypto;
+    public String getCoinName() {
+        return coinName;
     }
-    public void setCrypto(String crypto) {
-        this.crypto = crypto;
+    public void setCoinName(String coinName) {
+        this.coinName = coinName;
     }
     public String getCurrency() {
         return currency;
@@ -30,7 +30,7 @@ public class CryptoCompare {
 
     public static CryptoCompare create(JsonObject jo){
         CryptoCompare cc = new CryptoCompare();
-        cc.setCrypto(jo.getString("crypto"));
+        cc.setCoinName(jo.getString("coinName"));
         cc.setCurrency(jo.getString("currency"));
         cc.setPrice(jo.getString("price"));
         return cc;
@@ -38,7 +38,7 @@ public class CryptoCompare {
 
     public JsonObject toJson(){
         return Json.createObjectBuilder()
-                .add("crypto", crypto)
+                .add("coinName", coinName)
                 .add("currency", currency)
                 .add("price", price)
                 .build();
