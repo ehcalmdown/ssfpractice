@@ -20,10 +20,9 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import jakarta.json.Json;
+import jakarta.json.JsonArray;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonReader;
-import jakarta.json.JsonString;
-import jakarta.json.JsonValue;
 import sg.nus.iss.ssfpractice.models.CryptoCompare;
 import sg.nus.iss.ssfpractice.repositories.CryptoCompareRepo;
 
@@ -31,72 +30,71 @@ import sg.nus.iss.ssfpractice.repositories.CryptoCompareRepo;
 @Service
 public class CryptoCompareService {
     
-    private static final String URL= "https://min-api.cryptocompare.com/data/pricemulti";
+   private static final String URL = "https://min-api.cryptocompare.com/data/pricemulti";
 
-    @Value("{$API_KEY}")
+   @Value("${API_KEY}")
     private String key;
 
     @Autowired
     private CryptoCompareRepo ccRepo;
 
-    public List<CryptoCompare> getPrice(String crypto, String currency){
-
+    public List<CryptoCompare> getCryptoCompare(String coinName, String currency){
         CryptoCompare cc = new CryptoCompare();
-
-        //check for caching
-        Optional<String> opt = ccRepo.get(crypto, currency);
+        Optional<String>opt = ccRepo.get(coinName, currency);
         String payload;
-        System.out.printf(">>> crypto: %s\n", crypto);
+        System.out.printf(">>> coinName: %s\n", coinName.toLowerCase());
+        System.out.printf(">>> currency: %s\n", currency.toLowerCase());
 
-        //check for empty input
-        if (opt.isEmpty()){
-            System.out.println("testing");
+        //check for empty case
+        if(opt.isEmpty()){
+            System.out.println("testing....");
+            System.out.println("Obtaining info from Crypto compare...");
 
             try {
-                //url creation using query string
+                //create url query string
                 String url = UriComponentsBuilder.fromUriString(URL)
-                        .queryParam("fsym", URLEncoder.encode(crypto, "UTF-8"))
+                        .queryParam("fsym", URLEncoder.encode(coinName, "UTF-8"))
                         .queryParam("tsyms", URLEncoder.encode(currency, "UTF-8"))
                         .queryParam("api_key", key)
                         .toUriString();
+                        RequestEntity<Void> req = RequestEntity.get(url).build(); // Create the GET request, GET url
 
-    RequestEntity<Void> req = RequestEntity.get(url).build();
-    RestTemplate template = new RestTemplate();
-    ResponseEntity<String> resp; 
-    resp = template.exchange(req, String.class);    
-        payload = resp.getBody();
-        System.out.println(">>> latest price: " + payload);
-        
-                        ccRepo.save(crypto, currency, payload);
+                RestTemplate template = new RestTemplate(); // Make the call to cryptocompare
+                ResponseEntity<String> resp;
+
+                resp = template.exchange(req, String.class); // Throws an exception if status code not in between 200 - 399
+
+                payload = resp.getBody(); // Get the payload and do something with it, redundant payload is like me, a liability
+                System.out.println(">>> latest price: " + payload);
+
+                ccRepo.save(coinName, currency, payload);
             } catch (Exception e) {
                 //TODO: handle exception
                 System.out.println("Error: " + e.getMessage());
                 return Collections.emptyList();
             }
-        } else {
+
+        }else{
+            //retrieve value for case
             payload = opt.get();
-            System.out.println(">>>> latest cached: " + payload);
+            System.out.printf(">>>>latest cached price= %s\n", payload);
         }
-         // Convert payload to JsonObject
+        // Convert payload to JsonObject
         // Convert the String to a Reader
-        Reader strReader = new StringReader(payload); 
-        JsonReader jsonReader = Json.createReader(strReader);// Create a JsonReader from Reader
-        JsonObject jsonObject = jsonReader.readObject();// Read the payload as Json object
-
-       String price = this.
+        Reader strReader = new StringReader(payload);
+        JsonReader jsonReader = Json.createReader(strReader);
+        JsonObject jsonObject = jsonReader.readObject();
+        // JsonObject cryptoCompareResult = jsonReader.readObject();
+        // JsonArray coinNames = cryptoCompareResult.getJsonArray("cryptoCompare"); //just testing stuff out here
+        String price = jsonObject.getString(currency);
         List<CryptoCompare> list = new LinkedList<>();
-        
-
-        cc.setCrypto(crypto);
+        cc.setCrypto(coinName);
         cc.setCurrency(currency);
         cc.setPrice(price);
-        
-        
-        list.add(cc);
 
         return list;
-       
     }
+
 
 
 }

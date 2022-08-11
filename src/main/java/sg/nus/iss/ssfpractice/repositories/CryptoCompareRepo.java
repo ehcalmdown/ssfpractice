@@ -1,6 +1,5 @@
 package sg.nus.iss.ssfpractice.repositories;
 
-import java.lang.StackWalker.Option;
 import java.time.Duration;
 import java.util.Optional;
 
@@ -24,12 +23,12 @@ public class CryptoCompareRepo {
 
     public void save(String coinName, String payload, String currency) {
         ValueOperations<String, String> valueOp = redisTemplate.opsForValue();
-        valueOp.set(crypto.toLowerCase(), payload, Duration.ofMinutes(cacheTime));
+        valueOp.set(coinName.toLowerCase(), payload, Duration.ofMinutes(cacheTime));
     }
 
-    public Optional<String> get(String crypto, String currency){
+    public Optional<String> get(String coinName, String currency){
         ValueOperations<String, String> valueOp = redisTemplate.opsForValue();
-        String value = valueOp.get(crypto.toLowerCase());
+        String value = valueOp.get(coinName.toLowerCase());
         if(null == value)
             return Optional.empty(); //empty case
         return Optional.of(value); //data contained

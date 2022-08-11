@@ -13,7 +13,7 @@ import sg.nus.iss.ssfpractice.models.CryptoCompare;
 import sg.nus.iss.ssfpractice.services.CryptoCompareService;
 
 @Controller
-@RequestMapping("/compare")
+@RequestMapping("/cryptocompare")
 public class CryptoCompareController {
     @Autowired
     private CryptoCompareService ccSvc;
