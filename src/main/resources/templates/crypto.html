@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather</title>
+</head>
+<body>
+
+    <h1>Weather for <span data-th-text="${coin}"></span></h1>
+
+    <div data-th-each="w: ${price}">
+        <table>
+            <tr>
+                <td style="width: 30%;">
+                    <img data-th-src="@{}" alt="">
+                </td>
+                <td>
+                    <strong data-th-text="${cc.crypto}"></strong>
+                    - 
+                    <span data-th-text="${cc.currency}"></span>
+                    <span data-th-text="${cc.price}"></span>
+                </td>
+            </tr>
+        </table>
+
+    </div>
+    
+</body>
+</html>
