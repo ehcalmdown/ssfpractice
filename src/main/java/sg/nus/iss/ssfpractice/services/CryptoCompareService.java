@@ -84,7 +84,7 @@ public class CryptoCompareService {
         // JsonArray coinNames = cryptoCompareResult.getJsonArray("cryptoCompare"); //just testing stuff out here
         String price = jsonObject.getString(currency);
         List<CryptoCompare> list = new LinkedList<>();
-        cc.setCrypto(coinName);
+        cc.setCoinName(coinName);
         cc.setCurrency(currency);
         cc.setPrice(price);
 
